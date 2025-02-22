@@ -27,7 +27,9 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({ template: './src/index.html' }),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+        filename: 'styles.css', // Esto generará un archivo styles.css en lugar de tenerlo embebido
+      }),
   ],
   mode: 'development',
 };
