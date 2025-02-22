@@ -1,43 +1,58 @@
-let time = 0;
+let minutes = 0;
+let seconds = 0;
 let interval = null;
-let lastSetTime = 0;
+let lastSetMinutes = 0;
+let lastSetSeconds = 0;
 
 export function updateDisplay() {
-    document.getElementById("timer-display").innerText = time;
+    // Mostrar los minutos y segundos con formato MM:SS
+    document.getElementById("timer-display").innerText = 
+        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
 export function increaseTime() {
-    if (time < 59) {
-        time++;
-        lastSetTime = time;
-        updateDisplay();
+    // Añadir un minuto al timer
+    if (minutes < 59) {
+        minutes++;
     }
+    lastSetMinutes = minutes;
+    lastSetSeconds = seconds;
+    updateDisplay();
 }
 
 export function decreaseTime() {
-    if (time > 0) {
-        time--;
-        lastSetTime = time;
-        updateDisplay();
+    // Restar un minuto al timer, pero no dejar que sea negativo
+    if (minutes > 0) {
+        minutes--;
+    } else if (seconds > 0) {
+        // Si estamos en 0 minutos pero hay segundos, restamos un segundo
+        seconds--;
     }
+    lastSetMinutes = minutes;
+    lastSetSeconds = seconds;
+    updateDisplay();
 }
 
 export function startTimer() {
     if (interval) return;
     interval = setInterval(() => {
-        if (time > 0) {
-            time--;
-            updateDisplay();
+        if (seconds > 0) {
+            seconds--;
+        } else if (minutes > 0) {
+            minutes--;
+            seconds = 59;  // Reiniciamos los segundos a 59 cuando restamos un minuto
         } else {
             clearInterval(interval);
             interval = null;
         }
+        updateDisplay();
     }, 1000);
 }
 
 export function resetTimer() {
     clearInterval(interval);
     interval = null;
-    time = lastSetTime;
+    minutes = lastSetMinutes;
+    seconds = lastSetSeconds;
     updateDisplay();
 }
